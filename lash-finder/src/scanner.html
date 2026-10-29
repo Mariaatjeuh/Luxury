@@ -1,0 +1,59 @@
+<!-- AI SCANNER — draait volledig in de browser (MediaPipe), er wordt geen foto verstuurd -->
+<div id="lfScanner" class="lf-panel">
+  <div class="lf-scan-wrap">
+
+    <!-- 1. START -->
+    <div id="lfScanStart">
+      <div class="lf-upload lf-upload-static">
+        <span class="lf-upload-icon">◎</span>
+        <h3 class="lf-upload-title">Scan jouw oogvorm</h3>
+        <p class="lf-upload-hint">Selfie · hele gezicht in beeld · recht van voren</p>
+        <div class="lf-tips">
+          <span class="lf-tip">Goed licht van voren</span>
+          <span class="lf-tip">Geen bril</span>
+          <span class="lf-tip">Neutrale blik, niet lachen</span>
+          <span class="lf-tip">Camera op ooghoogte</span>
+        </div>
+        <div class="lf-scan-btns">
+          <button class="lf-btn-analyze show" id="lfCamBtn" onclick="lfCamOpen()">📷 Camera openen</button>
+          <button class="lf-btn-reup show" onclick="document.getElementById('lfFileInput').click()">🖼 Foto uploaden</button>
+        </div>
+        <p class="lf-scan-privacy">🔒 Je foto verlaat je toestel niet. De scan gebeurt op je eigen telefoon of computer en we slaan niets op.</p>
+      </div>
+    </div>
+    <input type="file" id="lfFileInput" accept="image/*" onchange="lfUpload(event)">
+
+    <!-- 2. CAMERA -->
+    <div id="lfCam" class="lf-cam" style="display:none;">
+      <div class="lf-cam-box">
+        <video id="lfVideo" playsinline muted autoplay></video>
+        <div class="lf-cam-oval"></div>
+      </div>
+      <p class="lf-cam-hint">Houd je gezicht binnen het ovaal en kijk neutraal recht in de camera.</p>
+      <button class="lf-btn-analyze show" onclick="lfCamShoot()">◉ Maak foto</button>
+      <button class="lf-btn-reup show" onclick="lfReset()">Annuleren</button>
+    </div>
+
+    <!-- 3. FOTO + ANALYSEREN -->
+    <div id="lfShot" style="display:none;">
+      <img id="lfPreview" alt="Jouw foto">
+      <button class="lf-btn-analyze show" id="lfAnalyzeBtn" onclick="lfAnalyze()">✦ Analyseer Mijn Oogvorm</button>
+      <button class="lf-btn-reup show" id="lfReupBtn" onclick="lfReset()">↺ Andere Foto Gebruiken</button>
+    </div>
+
+    <div class="lf-loading" id="lfSLd">
+      <div class="lf-ring"></div>
+      <p class="lf-loading-text" id="lfSLdText">Jouw oogvorm wordt gemeten…</p>
+      <div class="lf-loading-steps">
+        <p class="lf-lstep" style="animation-delay:0.5s">Gezicht herkennen…</p>
+        <p class="lf-lstep" style="animation-delay:1.3s">Ooghoeken en ooglid meten…</p>
+        <p class="lf-lstep" style="animation-delay:2.1s">Matchen met jouw perfecte lash stijlen…</p>
+      </div>
+    </div>
+
+    <!-- 4. AANVULLENDE VRAGEN NA DE SCAN -->
+    <div id="lfScanQ" style="display:none;"></div>
+
+    <div class="lf-result" id="lfSCard"></div>
+  </div>
+</div>
