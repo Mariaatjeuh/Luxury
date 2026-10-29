@@ -1,0 +1,1134 @@
+<!doctype html><html lang="nl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Lash Match – testkopie</title></head>
+<body>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&amp;family=Montserrat:wght@200;300;400;500&amp;display=swap" rel="stylesheet">
+<style>
+/* === LuxuryQueenLashes Lash Finder === */
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+:root{--bg:#fdf6f9;--dark:#1a0a12;--purple:#7b4f6e;--pink:#d4829e;--pink-light:#f2c4d8;--pink-dim:rgba(212,130,158,0.1);--grey:#9a7a8a;--border:rgba(180,100,140,0.2);--card:#ffffff;--shadow:0 4px 24px rgba(120,60,90,0.08);}
+body{font-family:'Montserrat',sans-serif;background:var(--bg);color:var(--dark);font-weight:300;overflow-x:hidden;}
+.lf-wrap{background:var(--bg);padding:0 0 60px;width:100%;}
+.lf-header{text-align:center;padding:56px 24px 0;}
+.lf-brand{font-size:10px;letter-spacing:5px;text-transform:uppercase;color:var(--pink);margin-bottom:16px;display:block;}
+.lf-title{font-family:'Cormorant Garamond',serif;font-size:clamp(36px,6vw,60px);font-weight:300;line-height:1.1;color:var(--dark);margin-bottom:16px;}
+.lf-title em{font-style:italic;color:var(--purple);}
+.lf-subtitle{font-size:12px;letter-spacing:0.8px;color:var(--grey);max-width:480px;margin:0 auto 48px;line-height:1.9;}
+.lf-toggle{display:flex;justify-content:center;margin:0 auto 56px;width:fit-content;border:1.5px solid var(--border);border-radius:4px;overflow:hidden;box-shadow:var(--shadow);}
+.lf-mode-btn{padding:14px 36px;background:var(--card);border:none;color:var(--grey);font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:3px;text-transform:uppercase;cursor:pointer;transition:all 0.3s;}
+.lf-mode-btn.active{background:var(--purple);color:white;font-weight:500;}
+.lf-mode-btn:not(.active):hover{background:var(--pink-dim);color:var(--purple);}
+.lf-panel{display:none;}.lf-panel.active{display:block;}
+.lf-quiz-wrap{max-width:760px;margin:0 auto;padding:0 24px 80px;}
+.lf-progress{display:flex;justify-content:center;gap:10px;margin-bottom:48px;}
+.lf-dot{width:8px;height:8px;border-radius:50%;background:var(--pink-light);transition:all 0.3s;}
+.lf-dot.active{background:var(--purple);transform:scale(1.4);}.lf-dot.done{background:var(--pink);}
+.lf-qcard{display:none;text-align:center;}.lf-qcard.active{display:block;}
+.lf-step{font-size:10px;letter-spacing:4px;color:var(--pink);text-transform:uppercase;margin-bottom:16px;}
+.lf-qtitle{font-family:'Cormorant Garamond',serif;font-size:clamp(24px,4vw,40px);font-weight:300;color:var(--dark);margin-bottom:10px;line-height:1.2;}
+.lf-qsub{font-size:11px;color:var(--grey);letter-spacing:0.5px;margin-bottom:36px;line-height:1.7;}
+.lf-options{display:grid;grid-template-columns:repeat(auto-fit,minmax(195px,1fr));gap:14px;margin-bottom:36px;}
+.lf-opt{border:1.5px solid var(--border);padding:20px 14px 18px;cursor:pointer;transition:all 0.25s;background:var(--card);text-align:center;position:relative;border-radius:10px;box-shadow:var(--shadow);}
+.lf-opt:hover{border-color:var(--pink);background:var(--pink-dim);transform:translateY(-2px);}
+.lf-opt.selected{border-color:var(--purple);background:var(--pink-dim);}
+.lf-opt-check{position:absolute;top:10px;right:10px;width:20px;height:20px;border:1.5px solid var(--border);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;transition:all 0.3s;color:transparent;}
+.lf-opt.selected .lf-opt-check{background:var(--purple);border-color:var(--purple);color:white;}
+.lf-eye-svg{margin:0 auto 10px;display:block;}
+.lf-opt-label{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:300;color:var(--dark);margin-bottom:4px;}
+.lf-opt-desc{font-size:10px;color:var(--grey);line-height:1.6;}
+.lf-opt-icon{font-size:28px;margin-bottom:10px;display:block;}
+.lf-nav{display:flex;justify-content:space-between;align-items:center;margin-top:8px;}
+.lf-btn-back{background:transparent;border:1.5px solid var(--border);color:var(--grey);padding:12px 28px;font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;border-radius:4px;transition:all 0.3s;}
+.lf-btn-back:hover{border-color:var(--purple);color:var(--purple);}
+.lf-btn-next{background:var(--purple);border:none;color:white;padding:14px 40px;font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:3px;text-transform:uppercase;cursor:pointer;font-weight:500;border-radius:4px;transition:all 0.3s;opacity:0.35;pointer-events:none;}
+.lf-btn-next.on{opacity:1;pointer-events:all;}.lf-btn-next.on:hover{background:var(--pink);}
+.lf-scan-wrap{max-width:640px;margin:0 auto;padding:0 24px 80px;text-align:center;}
+.lf-upload{border:2px dashed var(--border);padding:64px 32px;cursor:pointer;transition:all 0.3s;position:relative;margin-bottom:24px;background:var(--card);border-radius:12px;box-shadow:var(--shadow);}
+.lf-upload:hover{border-color:var(--pink);background:var(--pink-dim);}
+.lf-upload.has-img{padding:0;border-style:solid;border-color:var(--purple);}
+.lf-upload-icon{font-size:44px;margin-bottom:16px;display:block;}
+.lf-upload-title{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:300;color:var(--dark);margin-bottom:8px;}
+.lf-upload-hint{font-size:10px;color:var(--grey);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:24px;}
+.lf-tips{display:flex;justify-content:center;gap:28px;flex-wrap:wrap;}
+.lf-tip{font-size:10px;color:var(--grey);display:flex;align-items:center;gap:6px;}
+.lf-tip::before{content:'✓';color:var(--purple);font-weight:600;}
+#lfFileInput{display:none;}
+#lfPreview{width:100%;max-height:360px;object-fit:cover;display:none;border-radius:10px;}
+.lf-btn-analyze{background:var(--purple);border:none;color:white;padding:16px 56px;font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:3px;text-transform:uppercase;cursor:pointer;font-weight:500;border-radius:4px;transition:all 0.3s;display:none;margin:0 auto 14px;}
+.lf-btn-analyze:hover{background:var(--pink);}.lf-btn-analyze.show{display:block;}
+.lf-btn-reup{background:transparent;border:1.5px solid var(--border);color:var(--grey);padding:10px 24px;font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;border-radius:4px;transition:all 0.3s;display:none;margin:0 auto 28px;}
+.lf-btn-reup.show{display:block;}.lf-btn-reup:hover{border-color:var(--purple);color:var(--purple);}
+.lf-loading{display:none;padding:48px 0;text-align:center;}.lf-loading.show{display:block;}
+.lf-ring{width:52px;height:52px;border:2px solid var(--pink-light);border-top-color:var(--purple);border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 20px;}
+.lf-loading-text{font-size:11px;letter-spacing:3px;color:var(--purple);text-transform:uppercase;animation:pulse 1.5s ease-in-out infinite;}
+.lf-loading-steps{margin-top:14px;display:flex;flex-direction:column;gap:8px;align-items:center;}
+.lf-lstep{font-size:10px;color:var(--grey);opacity:0;animation:fadeUp 0.5s ease forwards;}
+.lf-result{display:none;border:1.5px solid var(--border);padding:44px 36px;text-align:left;background:var(--card);border-radius:12px;box-shadow:var(--shadow);}
+.lf-result.show{display:block;}
+.lf-res-eyebrow{font-size:10px;letter-spacing:4px;color:var(--pink);text-transform:uppercase;margin-bottom:14px;}
+.lf-res-shape{font-family:'Cormorant Garamond',serif;font-size:clamp(28px,5vw,48px);font-weight:300;color:var(--dark);margin-bottom:8px;}
+.lf-res-shape em{font-style:italic;color:var(--purple);}
+.lf-res-desc{font-size:12px;color:var(--grey);line-height:1.9;margin-bottom:32px;max-width:520px;}
+.lf-divider{width:50px;height:2px;background:var(--pink-light);margin-bottom:28px;border-radius:2px;}
+.lf-rec-title{font-size:10px;letter-spacing:4px;color:var(--purple);text-transform:uppercase;margin-bottom:18px;}
+.lf-recs{display:flex;flex-direction:column;gap:12px;margin-bottom:32px;}
+.lf-rec{display:flex;align-items:center;gap:18px;padding:16px 18px;border:1.5px solid var(--border);border-radius:8px;transition:all 0.3s;text-decoration:none;color:inherit;background:var(--bg);}
+.lf-rec:hover{border-color:var(--purple);background:var(--pink-dim);transform:translateX(4px);}
+.lf-rec-rank{font-family:'Cormorant Garamond',serif;font-size:26px;font-style:italic;color:var(--pink);min-width:28px;}
+.lf-rec-info{flex:1;}
+.lf-rec-name{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:300;color:var(--dark);margin-bottom:3px;}
+.lf-rec-why{font-size:10px;color:var(--grey);line-height:1.6;}
+.lf-rec-badge{font-size:9px;letter-spacing:1.5px;text-transform:uppercase;padding:4px 10px;border:1px solid var(--purple);color:var(--purple);border-radius:20px;white-space:nowrap;}
+.lf-rec-price{font-size:12px;color:var(--purple);font-weight:500;margin-top:2px;}
+.lf-rec-actions{display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex-shrink:0;}
+.lf-btn-cart{background:var(--purple) !important;border:none !important;color:white !important;padding:8px 14px !important;font-family:'Montserrat',sans-serif;font-size:9px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;border-radius:4px;transition:all 0.3s;white-space:nowrap;display:block !important;}
+.lf-btn-cart:hover{background:var(--pink) !important;}
+.lf-btn-cart.added{background:#5a8a5a !important;}
+.lf-btn-view{background:transparent !important;border:1px solid var(--border) !important;color:var(--grey) !important;padding:8px 14px !important;font-family:'Montserrat',sans-serif;font-size:9px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;border-radius:4px;transition:all 0.3s;white-space:nowrap;text-decoration:none !important;display:block !important;text-align:center;}
+.lf-btn-view:hover{border-color:var(--purple) !important;color:var(--purple) !important;}
+.lf-actions{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:36px;}
+.lf-btn-shop{background:#7b4f6e !important;border:none !important;color:white !important;padding:14px 32px !important;font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:3px;text-transform:uppercase;cursor:pointer;font-weight:500;border-radius:4px;transition:all 0.3s;text-decoration:none !important;display:inline-block !important;visibility:visible !important;opacity:1 !important;}
+.lf-btn-shop:hover{background:#d4829e !important;color:white !important;}
+.lf-btn-retake{background:transparent;border:1.5px solid var(--border);color:var(--grey);padding:14px 24px;font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;border-radius:4px;transition:all 0.3s;}
+.lf-btn-retake:hover{border-color:var(--purple);color:var(--purple);}
+.lf-email-box{border-top:1.5px solid var(--border);padding-top:32px;}
+.lf-email-title{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:300;color:var(--dark);margin-bottom:6px;}
+.lf-email-sub{font-size:11px;color:var(--grey);margin-bottom:18px;line-height:1.7;}
+.lf-email-row{display:flex;gap:0;max-width:460px;}
+.lf-email-input{flex:1;border:1.5px solid var(--border);border-right:none;padding:13px 18px;font-family:'Montserrat',sans-serif;font-size:12px;color:var(--dark);background:var(--bg);border-radius:4px 0 0 4px;outline:none;transition:border-color 0.3s;}
+.lf-email-input:focus{border-color:var(--purple);}
+.lf-email-input::placeholder{color:var(--grey);}
+.lf-email-btn{background:var(--purple);border:none;color:white;padding:13px 24px;font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;border-radius:0 4px 4px 0;transition:all 0.3s;white-space:nowrap;}
+.lf-email-btn:hover{background:var(--pink);}
+.lf-email-success{font-size:11px;color:var(--purple);margin-top:12px;display:none;}
+.lf-email-success.show{display:block;}
+.lf-email-disclaimer{font-size:9px;color:var(--grey);margin-top:8px;letter-spacing:0.3px;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+@keyframes spin{to{transform:rotate(360deg);}}
+@keyframes pulse{0%,100%{opacity:0.6;}50%{opacity:1;}}
+/* ===== AI SCAN (in de browser) ===== */
+.lf-upload-static{cursor:default;padding:48px 24px 32px;}
+.lf-upload-static:hover{border-color:var(--border);background:var(--card);}
+.lf-scan-btns{display:flex;flex-direction:column;align-items:center;gap:10px;margin-top:28px;}
+.lf-scan-btns .lf-btn-analyze,.lf-scan-btns .lf-btn-reup{margin:0;}
+.lf-scan-privacy{font-size:10px;color:var(--grey);line-height:1.7;margin-top:22px;max-width:380px;margin-left:auto;margin-right:auto;}
+#lfShot #lfPreview{display:block;max-height:420px;object-fit:contain;background:var(--card);margin-bottom:20px;box-shadow:var(--shadow);}
+.lf-cam{margin-bottom:24px;}
+.lf-cam-box{position:relative;width:100%;max-width:420px;margin:0 auto 14px;border-radius:12px;overflow:hidden;background:#000;aspect-ratio:3/4;}
+.lf-cam-box video{width:100%;height:100%;object-fit:cover;transform:scaleX(-1);display:block;}
+.lf-cam-oval{position:absolute;left:50%;top:47%;width:62%;height:68%;transform:translate(-50%,-50%);border:2px dashed rgba(255,255,255,0.85);border-radius:50%;box-shadow:0 0 0 2000px rgba(26,10,18,0.35);pointer-events:none;}
+.lf-cam-hint{font-size:11px;color:var(--grey);margin-bottom:18px;line-height:1.7;}
+#lfScanQ{text-align:center;margin-bottom:24px;}
+#lfScanQ .lf-options{text-align:center;}
+.lf-scan-measure{font-size:11px;color:var(--grey);line-height:1.8;background:var(--bg);border:1.5px solid var(--border);border-radius:8px;padding:14px 16px;margin-bottom:32px;}
+.lf-scan-measure strong{color:var(--purple);font-weight:500;}
+.lf-scan-debug{font-family:monospace;font-size:10px;color:var(--grey);white-space:pre-wrap;text-align:left;margin-top:10px;}
+@media (max-width:480px){#lfScanQ .lf-options{grid-template-columns:1fr 1fr;gap:10px;}#lfScanQ .lf-opt{padding:16px 8px 14px;}}
+</style>
+
+
+<div class="lf-wrap">
+
+<div class="lf-header">
+  <span class="lf-brand">LuxuryQueenLashes</span>
+  <h2 class="lf-title">Vind Jouw Perfecte<br><em>Lash Match</em>
+</h2>
+  <p class="lf-subtitle">Ontdek welke wimper stijl gemaakt is voor jouw unieke oogvorm — doe de quiz of laat onze AI het voor je uitzoeken.</p>
+</div>
+
+<div class="lf-toggle">
+  <button class="lf-mode-btn active" onclick="lfSwitch('quiz')">✦ Doe de Quiz</button>
+  <button class="lf-mode-btn" onclick="lfSwitch('scanner')">◎ AI Oog Scan</button>
+</div>
+
+<!-- QUIZ -->
+<div id="lfQuiz" class="lf-panel active">
+  <div class="lf-quiz-wrap">
+    <div class="lf-progress" id="lfDots"></div>
+
+    <!-- STAP 1: Oogvorm -->
+    <div class="lf-qcard active" id="lfQ1">
+      <p class="lf-step">Stap 1 van 4</p>
+      <h3 class="lf-qtitle">Welke oogvorm lijkt het meest op die van jou?</h3>
+      <p class="lf-qsub">Kijk recht in de spiegel — de illustraties helpen je vergelijken!</p>
+      <div class="lf-options">
+
+        <div class="lf-opt" onclick="lfPick(this,'q1','almond')">
+          <div class="lf-opt-check">✓</div>
+          <svg class="lf-eye-svg" width="80" height="40" viewbox="0 0 80 40">
+            <path d="M5,20 Q20,4 40,4 Q60,4 75,20 Q60,36 40,36 Q20,36 5,20 Z" fill="none" stroke="#7b4f6e" stroke-width="1.8"></path>
+            <circle cx="40" cy="20" r="9" fill="#d4829e" opacity="0.4"></circle>
+            <circle cx="40" cy="20" r="5" fill="#7b4f6e" opacity="0.65"></circle>
+            <path d="M5,20 Q20,4 40,4 Q60,4 75,20" fill="none" stroke="#1a0a12" stroke-width="2.5" stroke-linecap="round"></path>
+          </svg>
+          <div class="lf-opt-label">Amandelvormig</div>
+          <div class="lf-opt-desc">Smaller aan beide hoeken, breder in het midden</div>
+        </div>
+
+        <div class="lf-opt" onclick="lfPick(this,'q1','round')">
+          <div class="lf-opt-check">✓</div>
+          <svg class="lf-eye-svg" width="80" height="40" viewbox="0 0 80 40">
+            <ellipse cx="40" cy="20" rx="30" ry="17" fill="none" stroke="#7b4f6e" stroke-width="1.8"></ellipse>
+            <circle cx="40" cy="20" r="10" fill="#d4829e" opacity="0.4"></circle>
+            <circle cx="40" cy="20" r="5.5" fill="#7b4f6e" opacity="0.65"></circle>
+            <path d="M10,20 Q40,3 70,20" fill="none" stroke="#1a0a12" stroke-width="2.5" stroke-linecap="round"></path>
+          </svg>
+          <div class="lf-opt-label">Rond</div>
+          <div class="lf-opt-desc">Grote, open ogen — iris lijkt rondom zichtbaar</div>
+        </div>
+
+        <div class="lf-opt" onclick="lfPick(this,'q1','hooded')">
+          <div class="lf-opt-check">✓</div>
+          <svg class="lf-eye-svg" width="80" height="44" viewbox="0 0 80 44">
+            <path d="M8,26 Q20,14 40,14 Q60,14 72,26 Q60,36 40,36 Q20,36 8,26 Z" fill="none" stroke="#7b4f6e" stroke-width="1.5"></path>
+            <circle cx="40" cy="26" r="8" fill="#d4829e" opacity="0.4"></circle>
+            <circle cx="40" cy="26" r="4.5" fill="#7b4f6e" opacity="0.65"></circle>
+            <path d="M6,22 Q20,6 40,8 Q60,6 74,22 Q60,18 40,19 Q20,18 6,22 Z" fill="rgba(212,130,158,0.3)" stroke="#1a0a12" stroke-width="2" stroke-linecap="round"></path>
+          </svg>
+          <div class="lf-opt-label">Hangend ooglid</div>
+          <div class="lf-opt-desc">Huidplooi hangt over het ooglid (hooded eyes)</div>
+        </div>
+
+        <div class="lf-opt" onclick="lfPick(this,'q1','monolid')">
+          <div class="lf-opt-check">✓</div>
+          <svg class="lf-eye-svg" width="80" height="40" viewbox="0 0 80 40">
+            <path d="M8,20 Q20,8 40,8 Q60,8 72,20 Q60,32 40,32 Q20,32 8,20 Z" fill="none" stroke="#7b4f6e" stroke-width="1.8"></path>
+            <circle cx="40" cy="20" r="9" fill="#d4829e" opacity="0.4"></circle>
+            <circle cx="40" cy="20" r="5" fill="#7b4f6e" opacity="0.65"></circle>
+            <path d="M8,20 Q20,8 40,8 Q60,8 72,20" fill="none" stroke="#1a0a12" stroke-width="3" stroke-linecap="round"></path>
+          </svg>
+          <div class="lf-opt-label">Monolid</div>
+          <div class="lf-opt-desc">Glad ooglid zonder zichtbare vouw of lijn</div>
+        </div>
+
+        <div class="lf-opt" onclick="lfPick(this,'q1','downturned')">
+          <div class="lf-opt-check">✓</div>
+          <svg class="lf-eye-svg" width="80" height="44" viewbox="0 0 80 44">
+            <path d="M10,14 Q25,7 42,11 Q58,16 70,26 Q55,32 40,30 Q22,26 10,14 Z" fill="none" stroke="#7b4f6e" stroke-width="1.5"></path>
+            <circle cx="38" cy="20" r="8" fill="#d4829e" opacity="0.4"></circle>
+            <circle cx="38" cy="20" r="4.5" fill="#7b4f6e" opacity="0.65"></circle>
+            <path d="M10,14 Q26,6 42,10 Q58,15 70,26" fill="none" stroke="#1a0a12" stroke-width="2.5" stroke-linecap="round"></path>
+            <line x1="70" y1="26" x2="70" y2="31" stroke="#d4829e" stroke-width="1.8" stroke-linecap="round"></line>
+            <line x1="70" y1="31" x2="67" y2="28" stroke="#d4829e" stroke-width="1.8" stroke-linecap="round"></line>
+            <line x1="70" y1="31" x2="73" y2="28" stroke="#d4829e" stroke-width="1.8" stroke-linecap="round"></line>
+          </svg>
+          <div class="lf-opt-label">Neerhangend</div>
+          <div class="lf-opt-desc">Buitenhoek (slaap) hangt lager dan binnenhoek (neus)</div>
+        </div>
+
+        <div class="lf-opt" onclick="lfPick(this,'q1','upturned')">
+          <div class="lf-opt-check">✓</div>
+          <svg class="lf-eye-svg" width="80" height="44" viewbox="0 0 80 44">
+            <path d="M10,22 Q25,14 40,14 Q55,12 70,8 Q58,22 40,24 Q25,26 10,22 Z" fill="none" stroke="#7b4f6e" stroke-width="1.5"></path>
+            <circle cx="39" cy="19" r="8" fill="#d4829e" opacity="0.4"></circle>
+            <circle cx="39" cy="19" r="4.5" fill="#7b4f6e" opacity="0.65"></circle>
+            <path d="M10,22 Q26,13 40,13 Q55,12 70,7" fill="none" stroke="#1a0a12" stroke-width="2.5" stroke-linecap="round"></path>
+            <line x1="67" y1="10" x2="70" y2="7" stroke="#d4829e" stroke-width="1.8" stroke-linecap="round"></line>
+            <line x1="70" y1="7" x2="70" y2="11" stroke="#d4829e" stroke-width="1.8" stroke-linecap="round"></line>
+          </svg>
+          <div class="lf-opt-label">Opwaarts (Cat-eye)</div>
+          <div class="lf-opt-desc">Buitenhoek loopt omhoog — natuurlijk cat-eye effect</div>
+        </div>
+
+      </div>
+      <div class="lf-nav">
+<div></div>
+<button class="lf-btn-next" id="lfN1" onclick="lfNext(1)">Volgende →</button>
+</div>
+    </div>
+
+    <!-- STAP 2: Ooggrootte -->
+    <div class="lf-qcard" id="lfQ2">
+      <p class="lf-step">Stap 2 van 4</p>
+      <h3 class="lf-qtitle">Hoe zou je jouw ooggrootte omschrijven?</h3>
+      <p class="lf-qsub">Vergeleken met je gezicht lijken jouw ogen…</p>
+      <div class="lf-options">
+        <div class="lf-opt" onclick="lfPick(this,'q2','small')">
+<span class="lf-opt-icon">🔹</span><div class="lf-opt-label">Klein</div>
+<div class="lf-opt-desc">Ik wil ze groter &amp; opener laten lijken</div>
+<div class="lf-opt-check">✓</div>
+</div>
+        <div class="lf-opt" onclick="lfPick(this,'q2','medium')">
+<span class="lf-opt-icon">💎</span><div class="lf-opt-label">Gemiddeld</div>
+<div class="lf-opt-desc">Gemiddeld formaat — mooi geproportioneerd</div>
+<div class="lf-opt-check">✓</div>
+</div>
+        <div class="lf-opt" onclick="lfPick(this,'q2','large')">
+<span class="lf-opt-icon">🌟</span><div class="lf-opt-label">Groot</div>
+<div class="lf-opt-desc">Natuurlijk opvallende, expressieve ogen</div>
+<div class="lf-opt-check">✓</div>
+</div>
+      </div>
+      <div class="lf-nav">
+<button class="lf-btn-back" onclick="lfBack(2)">← Terug</button><button class="lf-btn-next" id="lfN2" onclick="lfNext(2)">Volgende →</button>
+</div>
+    </div>
+
+    <!-- STAP 3: Look -->
+    <div class="lf-qcard" id="lfQ3">
+      <p class="lf-step">Stap 3 van 4</p>
+      <h3 class="lf-qtitle">Welke look zoek jij?</h3>
+      <p class="lf-qsub">Kies de vibe die bij jouw inner queen past 👑</p>
+      <div class="lf-options">
+        <div class="lf-opt" onclick="lfPick(this,'q3','natural')">
+<span class="lf-opt-icon">🌿</span><div class="lf-opt-label">Natuurlijk</div>
+<div class="lf-opt-desc">Jouw wimpers, maar mooier</div>
+<div class="lf-opt-check">✓</div>
+</div>
+        <div class="lf-opt" onclick="lfPick(this,'q3','glam')">
+<span class="lf-opt-icon">✨</span><div class="lf-opt-label">Full Glam</div>
+<div class="lf-opt-desc">Gedurfd, dramatisch &amp; een echte blikvanger</div>
+<div class="lf-opt-check">✓</div>
+</div>
+        <div class="lf-opt" onclick="lfPick(this,'q3','wispy')">
+<span class="lf-opt-icon">🕊️</span><div class="lf-opt-label">Wispy</div>
+<div class="lf-opt-desc">Luchtig, getextureerd &amp; ultra-vrouwelijk</div>
+<div class="lf-opt-check">✓</div>
+</div>
+        <div class="lf-opt" onclick="lfPick(this,'q3','balanced')">
+<span class="lf-opt-icon">⚖️</span><div class="lf-opt-label">Gebalanceerd</div>
+<div class="lf-opt-desc">Vol maar draagbaar, voor elke gelegenheid</div>
+<div class="lf-opt-check">✓</div>
+</div>
+      </div>
+      <div class="lf-nav">
+<button class="lf-btn-back" onclick="lfBack(3)">← Terug</button><button class="lf-btn-next" id="lfN3" onclick="lfNext(3)">Volgende →</button>
+</div>
+    </div>
+
+    <!-- STAP 4: Ervaring -->
+    <div class="lf-qcard" id="lfQ4">
+      <p class="lf-step">Stap 4 van 4</p>
+      <h3 class="lf-qtitle">Hoeveel ervaring heb jij met wimpers?</h3>
+      <p class="lf-qsub">We koppelen je aan de stijl die het beste past bij jouw niveau</p>
+      <div class="lf-options">
+        <div class="lf-opt" onclick="lfPick(this,'q4','beginner')">
+<span class="lf-opt-icon">🌱</span><div class="lf-opt-label">Beginner</div>
+<div class="lf-opt-desc">Nieuw met wimpers — lekker simpel!</div>
+<div class="lf-opt-check">✓</div>
+</div>
+        <div class="lf-opt" onclick="lfPick(this,'q4','intermediate')">
+<span class="lf-opt-icon">💅</span><div class="lf-opt-label">Gevorderd</div>
+<div class="lf-opt-desc">Ik heb al een paar stijlen geprobeerd</div>
+<div class="lf-opt-check">✓</div>
+</div>
+        <div class="lf-opt" onclick="lfPick(this,'q4','pro')">
+<span class="lf-opt-icon">👑</span><div class="lf-opt-label">Lash Queen</div>
+<div class="lf-opt-desc">Ik ken mijn weg met wimpers</div>
+<div class="lf-opt-check">✓</div>
+</div>
+      </div>
+      <div class="lf-nav">
+<button class="lf-btn-back" onclick="lfBack(4)">← Terug</button><button class="lf-btn-next" id="lfN4" onclick="lfFinish()">Mijn Match Bekijken ✦</button>
+</div>
+    </div>
+
+    <!-- RESULTAAT -->
+    <div id="lfQResult" style="display:none;">
+      <div class="lf-loading" id="lfQLd">
+        <div class="lf-ring"></div>
+        <p class="lf-loading-text">Jouw oogprofiel wordt geanalyseerd…</p>
+        <div class="lf-loading-steps">
+          <p class="lf-lstep" style="animation-delay:0.6s">Oogvorm in kaart brengen…</p>
+          <p class="lf-lstep" style="animation-delay:1.4s">Matchen met LuxuryQueenLashes stijlen…</p>
+          <p class="lf-lstep" style="animation-delay:2.2s">Jouw aanbevelingen voorbereiden…</p>
+        </div>
+      </div>
+      <div class="lf-result" id="lfQCard"></div>
+    </div>
+  </div>
+</div>
+
+<!-- AI SCANNER — draait volledig in de browser (MediaPipe), er wordt geen foto verstuurd -->
+<div id="lfScanner" class="lf-panel">
+  <div class="lf-scan-wrap">
+
+    <!-- 1. START -->
+    <div id="lfScanStart">
+      <div class="lf-upload lf-upload-static">
+        <span class="lf-upload-icon">◎</span>
+        <h3 class="lf-upload-title">Scan jouw oogvorm</h3>
+        <p class="lf-upload-hint">Selfie · hele gezicht in beeld · recht van voren</p>
+        <div class="lf-tips">
+          <span class="lf-tip">Goed licht van voren</span>
+          <span class="lf-tip">Geen bril</span>
+          <span class="lf-tip">Neutrale blik, niet lachen</span>
+          <span class="lf-tip">Camera op ooghoogte</span>
+        </div>
+        <div class="lf-scan-btns">
+          <button class="lf-btn-analyze show" id="lfCamBtn" onclick="lfCamOpen()">📷 Camera openen</button>
+          <button class="lf-btn-reup show" onclick="document.getElementById('lfFileInput').click()">🖼 Foto uploaden</button>
+        </div>
+        <p class="lf-scan-privacy">🔒 Je foto verlaat je toestel niet. De scan gebeurt op je eigen telefoon of computer en we slaan niets op.</p>
+      </div>
+    </div>
+    <input type="file" id="lfFileInput" accept="image/*" onchange="lfUpload(event)">
+
+    <!-- 2. CAMERA -->
+    <div id="lfCam" class="lf-cam" style="display:none;">
+      <div class="lf-cam-box">
+        <video id="lfVideo" playsinline muted autoplay></video>
+        <div class="lf-cam-oval"></div>
+      </div>
+      <p class="lf-cam-hint">Houd je gezicht binnen het ovaal en kijk neutraal recht in de camera.</p>
+      <button class="lf-btn-analyze show" onclick="lfCamShoot()">◉ Maak foto</button>
+      <button class="lf-btn-reup show" onclick="lfReset()">Annuleren</button>
+    </div>
+
+    <!-- 3. FOTO + ANALYSEREN -->
+    <div id="lfShot" style="display:none;">
+      <img id="lfPreview" alt="Jouw foto">
+      <button class="lf-btn-analyze show" id="lfAnalyzeBtn" onclick="lfAnalyze()">✦ Analyseer Mijn Oogvorm</button>
+      <button class="lf-btn-reup show" id="lfReupBtn" onclick="lfReset()">↺ Andere Foto Gebruiken</button>
+    </div>
+
+    <div class="lf-loading" id="lfSLd">
+      <div class="lf-ring"></div>
+      <p class="lf-loading-text" id="lfSLdText">Jouw oogvorm wordt gemeten…</p>
+      <div class="lf-loading-steps">
+        <p class="lf-lstep" style="animation-delay:0.5s">Gezicht herkennen…</p>
+        <p class="lf-lstep" style="animation-delay:1.3s">Ooghoeken en ooglid meten…</p>
+        <p class="lf-lstep" style="animation-delay:2.1s">Matchen met jouw perfecte lash stijlen…</p>
+      </div>
+    </div>
+
+    <!-- 4. AANVULLENDE VRAGEN NA DE SCAN -->
+    <div id="lfScanQ" style="display:none;"></div>
+
+    <div class="lf-result" id="lfSCard"></div>
+  </div>
+</div>
+
+</div>
+<!-- end lf-wrap -->
+
+<script>
+// ===================================================================
+// PRODUCTEN — pas hier aan als je nieuwe producten toevoegt
+// variantId = Shopify variant ID voor directe "In winkelmandje" knop
+// variantId: null = meerdere varianten, linkt naar productpagina
+// ===================================================================
+const P = {
+  // PRESS-ON CLUSTERS
+  wispy:    { name:"Natural Wispy Press-On Lashes",     url:"https://luxuryqueenlashes.com/en/products/natural-wispy-press-on-lashes",  badge:"Best Verkocht",        variantId:"45463104192780",  price:"€22,99" },
+  balanced: { name:"Balanced Volume Press-on Clusters", url:"https://luxuryqueenlashes.com/en/products/balanced-volume",                 badge:"Favoriet",             variantId:"53613018317068",  price:"€22,99" },
+  glam:     { name:"Full Glam Press-on Lashes",         url:"https://luxuryqueenlashes.com/en/products/full-glam",                      badge:"Full Glam",            variantId:"54770875138316",  price:"€22,99" },
+  // PREMIUM STRIP LASHES
+  arien:    { name:"Queen Arien Lashes",                url:"https://luxuryqueenlashes.com/products/queen-arien-lashes",                 badge:"Royal Glam",           variantId:"54439551369484",  price:"€9,99" },
+  maria:    { name:"Queen Maria Lashes",                url:"https://luxuryqueenlashes.com/products/queen-maria-lashes",                 badge:"Premium",              variantId:"53838141948172",  price:"€9,99" },
+  heaven:   { name:"Queen Heaven Lashes",               url:"https://luxuryqueenlashes.com/en/products/outlet-lashes-queen-heaven",      badge:"Liftend & Licht",      variantId:"54030510686476",  price:"€7,50" },
+  // MAGNETIC
+  mag_nat:  { name:"Magnetic Natural Lashes (HWZ9)",    url:"https://luxuryqueenlashes.com/products/the-magnetic-daily-glam-box",        badge:"Dagelijks Draagbaar",  variantId:null,              price:"€9,99" },
+  mag_moon: { name:"Magnetic Moonilicious Lashes",      url:"https://luxuryqueenlashes.com/products/the-magnetic-daily-glam-box",        badge:"Volume Zonder Lijm",   variantId:null,              price:"€9,99" },
+  mag_dram: { name:"Magnetic Dramatic Lashes (TR41)",   url:"https://luxuryqueenlashes.com/products/the-magnetic-daily-glam-box",        badge:"Dramatisch Effect",    variantId:null,              price:"€9,99" },
+  mag_lusc: { name:"Magnetic Luscious Lashes",          url:"https://luxuryqueenlashes.com/products/the-magnetic-daily-glam-box",        badge:"Weelderig & Luxe",     variantId:null,              price:"€9,99" },
+  // KITS
+  begkit:   { name:"Beginner Test Kit",                 url:"https://luxuryqueenlashes.com/en/products/beginner-test-kit",               badge:"Perfect voor Starters",variantId:null,              price:"€26,00" },
+  glamkit:  { name:"Glam on the Go Kit",                url:"https://luxuryqueenlashes.com/en/products/glam-on-the-go-kit",              badge:"Complete Glam Kit",    variantId:null,              price:"€32,00" },
+};
+
+// ===================================================================
+// OOGVORM BESCHRIJVINGEN
+// ===================================================================
+const SHAPES = {
+  almond:     { label:"Amandelvormige Ogen",    desc:"Jij hebt de meest veelzijdige oogvorm — bijna elke stijl staat je prachtig. Je van nature getaperde, evenwichtige oogvorm wordt versterkt door volume in het midden." },
+  round:      { label:"Ronde Ogen",             desc:"Jouw expressieve ronde ogen profiteren het meest van wimpers die verlengen en een subtiel cat-eye effect creëren. Wispy stijlen met langere buitenste clusters geven prachtige definitie." },
+  hooded:     { label:"Hangend Ooglid",         desc:"Jouw ogen zijn sensueel en mysterieus. Kleinere, gekrulde wimpers die het oog optisch openen werken het beste — zo creëer je een mooie, open blik." },
+  monolid:    { label:"Monolid Ogen",           desc:"Jouw prachtige monolid oogvorm wordt het mooist benadrukt door wimpers met extra krul en volume, die de illusie van diepte en dimensie toevoegen." },
+  downturned: { label:"Neerhangend Ooghoek",   desc:"Wimpers met extra lift bij de buitenste hoeken balanceren jouw oogvorm prachtig en creëren een naturel opgetild effect dat je blik verhelst." },
+  upturned:   { label:"Opwaartse (Cat-eye) Ogen", desc:"Jouw van nature kattachtige oogvorm is verbluffend. Je kunt bijna elke stijl dragen — langere wimpers in het midden geven een doe-eyed effect." }
+};
+
+// ===================================================================
+// QUIZ LOGICA — oogvorm + look + maat + ervaring → specifiek product
+// ===================================================================
+function getQuizRecs(shape, size, look, lvl) {
+  let recs = [];
+
+  // BEGINNER → altijd Beginner Kit als #1
+  if (lvl === 'beginner') {
+    recs.push({ p:P.begkit, why:"Speciaal voor beginners — alles-in-één kit met eenvoudige press-on applicatie. Geen ervaring nodig!" });
+  }
+
+  // OOGVORM-GEBASEERDE AANBEVELINGEN
+  if (shape === 'almond') {
+    if (look === 'natural' || look === 'wispy') recs.push({ p:P.wispy,    why:"Natural Wispy clusters accentueren jouw amandelvorm prachtig — luchtig en verdelend." });
+    if (look === 'balanced')                    recs.push({ p:P.balanced, why:"Balanced Volume past perfect bij jouw veelzijdige amandelvorm voor elke gelegenheid." });
+    if (look === 'glam' && lvl === 'pro')       recs.push({ p:P.arien,   why:"Queen Arien geeft jouw amandelvorm een koninklijke, dramatische allure." });
+    if (look === 'glam' && lvl !== 'pro')       recs.push({ p:P.glam,    why:"Full Glam clusters geven jouw amandelvorm een gedurfde, dramatische uitstraling." });
+  }
+
+  if (shape === 'round') {
+    if (look === 'natural' || look === 'wispy') recs.push({ p:P.wispy,    why:"Wispy clusters verlengen jouw ronde ogen en geven een subtiel cat-eye effect." });
+    if (look === 'glam')                        recs.push({ p:P.glam,    why:"Full Glam versterkt jouw expressieve ronde ogen — maximale drama en volume." });
+    if (look === 'balanced')                    recs.push({ p:P.balanced, why:"Balanced Volume geeft jouw ronde ogen een mooie, gepolijste volheid." });
+    recs.push({ p:P.mag_moon, why:"Magnetic Moonilicious voegt volume toe dat jouw ronde ogen prachtig benadrukt zonder te zwaar te worden." });
+  }
+
+  if (shape === 'hooded') {
+    recs.push({ p:P.heaven,   why:"Queen Heaven is speciaal ontworpen voor hangend ooglid — de liftende krul opent jouw ogen visueel." });
+    recs.push({ p:P.mag_nat,  why:"Magnetic Natural lashes zijn licht en subtiel — perfect voor hangend ooglid zodat je oog niet drukt." });
+    if (look === 'glam')      recs.push({ p:P.wispy, why:"Natural Wispy geeft ook bij hangend ooglid een mooie open look zonder te zwaar te worden." });
+  }
+
+  if (shape === 'monolid') {
+    recs.push({ p:P.heaven,   why:"Queen Heaven creëert bij monolid ogen prachtige definitie en een optisch bredere blik." });
+    recs.push({ p:P.mag_moon, why:"Magnetic Moonilicious voegt de volume en krul toe die monolid ogen extra dimensie geven." });
+    if (look === 'natural')   recs.push({ p:P.wispy, why:"Natural Wispy clusters geven monolid ogen een subtiele maar zichtbare verbetering." });
+  }
+
+  if (shape === 'downturned') {
+    recs.push({ p:P.heaven,   why:"Queen Heaven lifts jouw neerhangend ooghoek optisch omhoog dankzij de buitenwaartse krul en langere uiteinden." });
+    if (look === 'glam')      recs.push({ p:P.mag_dram, why:"Magnetic Dramatic geeft een dramatisch lift-effect dat jouw neerhangend ooghoek prachtig balanceert." });
+    if (look === 'natural' || look === 'wispy') recs.push({ p:P.wispy, why:"Natural Wispy geeft een subtiel liftend effect dat neerhangend ooghoeken zachte elegantie geeft." });
+    recs.push({ p:P.balanced, why:"Balanced Volume voegt evenredige volheid toe die jouw ooghoeken mooi in balans brengt." });
+  }
+
+  if (shape === 'upturned') {
+    if (look === 'natural' || look === 'wispy') recs.push({ p:P.wispy,    why:"Natural Wispy benadrukt jouw van nature cat-eye vorm op een elegante, luchtige manier." });
+    if (look === 'balanced')                    recs.push({ p:P.balanced, why:"Balanced Volume geeft jouw cat-eye ogen een volle, verfijnde look." });
+    if (look === 'glam' && lvl === 'pro')       recs.push({ p:P.mag_lusc, why:"Magnetic Luscious versterkt jouw natuurlijke cat-eye met weelderig volume — ultra luxe." });
+    if (look === 'glam' && lvl !== 'pro')       recs.push({ p:P.arien,   why:"Queen Arien versterkt jouw opwaartse cat-eye vorm met veerachtig, royal glam volume." });
+    recs.push({ p:P.maria, why:"Queen Maria premium lashes passen prachtig bij jouw upturned oogvorm voor een chique, verfijnde look." });
+  }
+
+  // EXTRA OP BASIS VAN MAAT
+  // Kleine ogen, monolid & hangend ooglid: Natural Wispy opent beter dan Full Glam
+  if (size === 'small' && !recs.find(r=>r.p===P.wispy)) {
+    recs.push({ p:P.wispy, why:"Natural Wispy clusters openen kleine ogen luchtig en verlengend — zonder te overweldigen." });
+  }
+  // Full Glam past juist bij ronde, almond en cat-eye ogen
+  if ((shape === 'round' || shape === 'almond' || shape === 'upturned') && look === 'glam' && !recs.find(r=>r.p===P.glam)) {
+    recs.push({ p:P.glam, why:"Full Glam accentueert jouw oogvorm perfect — maximale drama en volume op precies de juiste plek." });
+  }
+  if (size === 'large' && lvl === 'pro' && !recs.find(r=>r.p===P.mag_lusc)) {
+    recs.push({ p:P.mag_lusc, why:"Magnetic Luscious past perfect bij grote expressieve ogen — weelderig volume voor een koninginnen-look." });
+  }
+
+  // PRO EXTRA
+  if (lvl === 'pro' && !recs.find(r=>r.p===P.maria)) {
+    recs.push({ p:P.maria, why:"Queen Maria premium herbruikbare lashes zijn de perfecte keuze voor de ervaren lash queen." });
+  }
+
+  // INTERMEDIATE + GLAM KIT
+  if (lvl === 'intermediate' && look === 'glam' && !recs.find(r=>r.p===P.glamkit)) {
+    recs.push({ p:P.glamkit, why:"De Glam on the Go Kit geeft jou alles wat je nodig hebt voor een volledige glamour look." });
+  }
+
+  // Deduplicate
+  const seen = new Set();
+  recs = recs.filter(r => { if (seen.has(r.p.name)) return false; seen.add(r.p.name); return true; });
+
+  // Fallback als er minder dan 3 zijn
+  const fallbacks = [P.wispy, P.balanced, P.glam, P.heaven, P.mag_nat];
+  for (const p of fallbacks) {
+    if (recs.length >= 3) break;
+    if (!seen.has(p.name)) { recs.push({ p, why:"Een veelzijdige stijl die bij jouw oogvorm en look past." }); seen.add(p.name); }
+  }
+
+  return recs.slice(0, 3);
+}
+
+// ===================================================================
+// QUIZ FLOW
+// ===================================================================
+const lfA = {};
+
+function lfInitDots() {
+  const c = document.getElementById('lfDots'); c.innerHTML = '';
+  for (let i = 1; i <= 4; i++) {
+    const d = document.createElement('div');
+    d.className = 'lf-dot' + (i === 1 ? ' active' : '');
+    d.id = 'lfD' + i; c.appendChild(d);
+  }
+}
+lfInitDots();
+
+function lfPick(el, q, val) {
+  el.closest('.lf-options').querySelectorAll('.lf-opt').forEach(o => o.classList.remove('selected'));
+  el.classList.add('selected');
+  lfA[q] = val;
+  document.getElementById('lfN' + q.replace('q', '')).classList.add('on');
+}
+
+function lfNext(s) { document.getElementById('lfQ'+s).classList.remove('active'); document.getElementById('lfQ'+(s+1)).classList.add('active'); lfDots(s+1); }
+function lfBack(s) { document.getElementById('lfQ'+s).classList.remove('active'); document.getElementById('lfQ'+(s-1)).classList.add('active'); lfDots(s-1); }
+
+function lfDots(a) {
+  for (let i = 1; i <= 4; i++) {
+    const d = document.getElementById('lfD'+i);
+    d.classList.remove('active','done');
+    if (i === a) d.classList.add('active');
+    else if (i < a) d.classList.add('done');
+  }
+}
+
+function lfFinish() {
+  document.getElementById('lfQ4').classList.remove('active');
+  const res = document.getElementById('lfQResult');
+  res.style.display = 'block';
+  document.getElementById('lfQLd').classList.add('show');
+  setTimeout(() => {
+    document.getElementById('lfQLd').classList.remove('show');
+    const recs = getQuizRecs(lfA.q1, lfA.q2, lfA.q3, lfA.q4);
+    const card = document.getElementById('lfQCard');
+    card.innerHTML = lfBuild({ recs, shape: lfA.q1 }, false);
+    card.classList.add('show');
+  }, 3400);
+}
+
+// ===================================================================
+// AI SCANNER — gezichtsherkenning in de browser (Google MediaPipe)
+// De foto wordt NIET verstuurd: alles gebeurt op het toestel van de klant.
+// Het model (~4 MB) wordt pas geladen als iemand de scan opent.
+// ===================================================================
+const LF_SCAN = Object.assign({
+  lib:   'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.35/vision_bundle.mjs',
+  wasm:  'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.35/wasm',
+  model: 'https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task'
+}, window.LF_SCAN_CFG || {});
+
+// Drempelwaarden — bijstellen op basis van echte scans (zie ?lfdebug=1)
+const LF_T = {
+  tiltUp:      9,     // ooghoek-hoek (graden) vanaf hier: opwaarts / cat-eye
+  tiltDown:    0,     // tot en met hier: neerhangend
+  roundOpen:   0.37,  // hoogte/breedte van het oog vanaf hier: rond
+  sizeSmall:   0.185, // oogbreedte / gezichtsbreedte onder deze waarde: klein
+  sizeLarge:   0.225, // boven deze waarde: groot
+  minFacePx:   160,   // gezicht moet minstens zo breed zijn (pixels)
+  maxYaw:      15,    // hoofd max zoveel graden opzij gedraaid
+  maxPitch:    22,    // hoofd max zoveel graden omhoog/omlaag
+  minOpen:     0.16,  // kleiner = ogen (half) dicht
+  maxSquint:   0.65   // blendshape: ogen samengeknepen (lachen)
+};
+
+const LF_SCAN_MSG = {
+  noface:  'We zien geen gezicht op deze foto. Zorg dat je hele gezicht in beeld is, recht van voren en met goed licht. Een close-up van alleen je oog werkt niet.',
+  multi:   'We zien meer dan één gezicht. Gebruik een foto waarop alleen jij staat.',
+  small:   'Je gezicht is te klein in beeld. Kom dichter bij de camera, zodat je gezicht een groot deel van de foto vult.',
+  yaw:     'Je hoofd is te veel opzij gedraaid. Kijk recht in de camera.',
+  pitch:   'Je kijkt te veel omhoog of omlaag. Houd de camera op ooghoogte en kijk recht vooruit.',
+  closed:  'Je ogen lijken (half) dicht. Kijk met open ogen recht in de camera.',
+  squint:  'Je lacht of knijpt je ogen samen — daardoor lijkt je oogvorm anders. Kijk neutraal in de camera.',
+  support: 'De scan werkt niet op dit toestel of in deze browser. Probeer een andere browser, of doe de quiz — die geeft net zo goed een persoonlijk advies.',
+  camera:  'We kunnen je camera niet openen. Geef toestemming in je browser, of upload een foto.'
+};
+
+let lfImg = null;          // dataURL van de foto (voor preview)
+let lfCanvas = null;       // geschaalde foto voor de analyse
+let lfStream = null;       // camera stream
+let lfLM = null, lfLMPromise = null;
+let lfScan = null;         // meetresultaat van de laatste scan
+const lfSA = {};           // antwoorden op de vragen na de scan
+const LF_DEBUG = /[?&]lfdebug=1/.test(location.search);
+
+function lfShow(id, on) { const el = document.getElementById(id); if (el) el.style.display = on ? '' : 'none'; }
+
+function lfLoadScanner() {
+  if (lfLM) return Promise.resolve(lfLM);
+  if (!lfLMPromise) {
+    lfLMPromise = (async () => {
+      const vision = await import(LF_SCAN.lib);
+      const files = await vision.FilesetResolver.forVisionTasks(LF_SCAN.wasm);
+      lfLM = await vision.FaceLandmarker.createFromOptions(files, {
+        baseOptions: { modelAssetPath: LF_SCAN.model, delegate: 'CPU' },
+        runningMode: 'IMAGE',
+        numFaces: 2,
+        outputFaceBlendshapes: true,
+        outputFacialTransformationMatrixes: true
+      });
+      return lfLM;
+    })().catch(e => { lfLMPromise = null; throw e; });
+  }
+  return lfLMPromise;
+}
+
+// ---------- foto binnenhalen ----------
+function lfSetSource(src) {
+  // Schaal naar max 1280px: sneller en genoeg detail voor de ogen
+  const max = 1280;
+  const w = src.videoWidth || src.naturalWidth || src.width;
+  const h = src.videoHeight || src.naturalHeight || src.height;
+  const s = Math.min(1, max / Math.max(w, h));
+  lfCanvas = document.createElement('canvas');
+  lfCanvas.width = Math.round(w * s); lfCanvas.height = Math.round(h * s);
+  lfCanvas.getContext('2d').drawImage(src, 0, 0, lfCanvas.width, lfCanvas.height);
+  lfImg = lfCanvas.toDataURL('image/jpeg', 0.85);
+  document.getElementById('lfPreview').src = lfImg;
+  lfShow('lfScanStart', false); lfShow('lfCam', false); lfShow('lfShot', true);
+  document.getElementById('lfSCard').classList.remove('show');
+  document.getElementById('lfSCard').innerHTML = '';
+}
+
+function lfUpload(e) {
+  const file = e.target.files[0]; if (!file) return;
+  const url = URL.createObjectURL(file);
+  const img = new Image();
+  img.onload = () => { lfSetSource(img); URL.revokeObjectURL(url); };
+  img.onerror = () => { URL.revokeObjectURL(url); lfErr('Dit bestand kunnen we niet openen. Gebruik een JPG- of PNG-foto.'); };
+  img.src = url;
+  lfLoadScanner().catch(() => {});
+}
+
+async function lfCamOpen() {
+  lfLoadScanner().catch(() => {});
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) { lfErr(LF_SCAN_MSG.camera); return; }
+  try {
+    lfStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user', width: { ideal: 1280 }, height: { ideal: 960 } }, audio: false });
+    const v = document.getElementById('lfVideo');
+    v.srcObject = lfStream;
+    await v.play().catch(() => {});
+    lfShow('lfScanStart', false); lfShow('lfCam', true);
+    document.getElementById('lfSCard').classList.remove('show');
+  } catch (e) {
+    lfCamStop();
+    lfErr(LF_SCAN_MSG.camera);
+  }
+}
+
+function lfCamStop() {
+  if (lfStream) { lfStream.getTracks().forEach(t => t.stop()); lfStream = null; }
+  const v = document.getElementById('lfVideo'); if (v) v.srcObject = null;
+}
+
+function lfCamShoot() {
+  const v = document.getElementById('lfVideo');
+  if (!v || !v.videoWidth) return;
+  lfSetSource(v);
+  lfCamStop();
+}
+
+function lfReset() {
+  lfCamStop();
+  lfImg = null; lfCanvas = null; lfScan = null;
+  Object.keys(lfSA).forEach(k => delete lfSA[k]);
+  document.getElementById('lfPreview').src = '';
+  lfShow('lfScanStart', true); lfShow('lfCam', false); lfShow('lfShot', false); lfShow('lfScanQ', false);
+  document.getElementById('lfScanQ').innerHTML = '';
+  document.getElementById('lfSLd').classList.remove('show');
+  document.getElementById('lfSCard').classList.remove('show');
+  document.getElementById('lfSCard').innerHTML = '';
+  document.getElementById('lfFileInput').value = '';
+  try { sessionStorage.removeItem('lq_result_html'); } catch (e) {}
+}
+
+// ---------- meten ----------
+// Puur rekenwerk op de 478 gezichtspunten van MediaPipe.
+function lfMeasure(res, W, H) {
+  const faces = res.faceLandmarks || [];
+  if (faces.length === 0) return { ok: false, reason: 'noface' };
+  if (faces.length > 1) return { ok: false, reason: 'multi' };
+  const L = faces[0];
+  const P = i => ({ x: L[i].x * W, y: L[i].y * H });
+  const d = (a, b) => Math.hypot(a.x - b.x, a.y - b.y);
+  const mid = (a, b) => ({ x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 });
+
+  // Kanteling van het hoofd (roll) wegrekenen: draai alle punten tot de ogen horizontaal liggen
+  const rc = mid(P(33), P(133)), lc = mid(P(263), P(362));
+  let roll = Math.atan2(lc.y - rc.y, lc.x - rc.x);
+  if (roll > Math.PI / 2) roll -= Math.PI; else if (roll < -Math.PI / 2) roll += Math.PI;
+  const c = mid(rc, lc), cs = Math.cos(-roll), sn = Math.sin(-roll);
+  const Q = i => { const p = P(i), dx = p.x - c.x, dy = p.y - c.y; return { x: c.x + dx * cs - dy * sn, y: c.y + dx * sn + dy * cs }; };
+
+  const eye = (outer, inner, ups, lows) => {
+    const o = Q(outer), n = Q(inner), w = d(o, n);
+    // positief = buitenooghoek hoger dan binnenooghoek
+    const tilt = Math.atan2(n.y - o.y, Math.abs(n.x - o.x)) * 180 / Math.PI;
+    const h = ups.reduce((s, u, k) => s + d(Q(u), Q(lows[k])), 0) / ups.length;
+    return { w, tilt, open: h / w };
+  };
+  const er = eye(33, 133, [160, 159, 158], [144, 145, 153]);
+  const el = eye(263, 362, [387, 386, 385], [373, 374, 380]);
+  const faceW = d(Q(234), Q(454));
+
+  // Houding van het hoofd uit de transformatiematrix (kolom-voor-kolom opgeslagen)
+  let yaw = 0, pitch = 0;
+  const M = res.facialTransformationMatrixes && res.facialTransformationMatrixes[0];
+  if (M && M.data) {
+    const m = M.data, r = (i, j) => m[j * 4 + i];
+    yaw = Math.asin(Math.max(-1, Math.min(1, -r(2, 0)))) * 180 / Math.PI;
+    pitch = Math.atan2(r(2, 1), r(2, 2)) * 180 / Math.PI;
+  }
+  const bs = {};
+  const B = res.faceBlendshapes && res.faceBlendshapes[0];
+  if (B && B.categories) B.categories.forEach(k => { bs[k.categoryName] = k.score; });
+  const squint = Math.max(bs.eyeSquintLeft || 0, bs.eyeSquintRight || 0);
+  const smile = Math.max(bs.mouthSmileLeft || 0, bs.mouthSmileRight || 0);
+
+  const m = {
+    tilt: (er.tilt + el.tilt) / 2,
+    open: (er.open + el.open) / 2,
+    sizeRatio: ((er.w + el.w) / 2) / faceW,
+    faceW, yaw, pitch, roll: roll * 180 / Math.PI, squint, smile
+  };
+  if (faceW < LF_T.minFacePx) return { ok: false, reason: 'small', m };
+  if (Math.abs(yaw) > LF_T.maxYaw) return { ok: false, reason: 'yaw', m };
+  if (Math.abs(pitch) > LF_T.maxPitch) return { ok: false, reason: 'pitch', m };
+  if (m.open < LF_T.minOpen) return { ok: false, reason: 'closed', m };
+  if (squint > LF_T.maxSquint) return { ok: false, reason: 'squint', m };
+
+  // Oogvorm: bij twijfel 'almond' (past bij de meeste stijlen)
+  let shape = 'almond';
+  if (m.tilt >= LF_T.tiltUp) shape = 'upturned';
+  else if (m.tilt <= LF_T.tiltDown) shape = 'downturned';
+  else if (m.open >= LF_T.roundOpen) shape = 'round';
+
+  let size = 'medium';
+  if (m.sizeRatio < LF_T.sizeSmall || (m.open < 0.22 && m.sizeRatio < 0.2)) size = 'small';
+  else if (m.sizeRatio > LF_T.sizeLarge && m.open > 0.28) size = 'large';
+
+  return { ok: true, shape, size, m };
+}
+
+async function lfAnalyze() {
+  if (!lfCanvas) return;
+  lfShow('lfShot', false);
+  document.getElementById('lfSCard').classList.remove('show');
+  const ld = document.getElementById('lfSLd');
+  const ldText = document.getElementById('lfSLdText');
+  ldText.textContent = lfLM ? 'Jouw oogvorm wordt gemeten…' : 'Scan wordt geladen…';
+  ld.classList.add('show');
+  const started = Date.now();
+  let out;
+  try {
+    const lm = await lfLoadScanner();
+    ldText.textContent = 'Jouw oogvorm wordt gemeten…';
+    out = lfMeasure(lm.detect(lfCanvas), lfCanvas.width, lfCanvas.height);
+  } catch (e) {
+    console.error('Lash scan:', e);
+    ld.classList.remove('show');
+    lfErr(LF_SCAN_MSG.support, true);
+    return;
+  }
+  // Laat de laadanimatie minstens even zien
+  const wait = Math.max(0, 1800 - (Date.now() - started));
+  setTimeout(() => {
+    ld.classList.remove('show');
+    if (!out.ok) { lfErr(LF_SCAN_MSG[out.reason] + lfDebugText(out.m)); return; }
+    lfScan = out;
+    lfScanAsk(0);
+  }, wait);
+}
+
+function lfDebugText(m) {
+  if (!LF_DEBUG || !m) return '';
+  const f = (v, n) => (Math.round(v * Math.pow(10, n)) / Math.pow(10, n));
+  return `<span class="lf-scan-debug" style="display:block">tilt ${f(m.tilt,1)}° · open ${f(m.open,3)} · grootte ${f(m.sizeRatio,3)} · gezicht ${Math.round(m.faceW)}px\nyaw ${f(m.yaw,1)}° · pitch ${f(m.pitch,1)}° · roll ${f(m.roll,1)}° · squint ${f(m.squint,2)} · smile ${f(m.smile,2)}</span>`;
+}
+
+// ---------- vragen na de scan ----------
+// Een ooglidplooi (hangend ooglid / monolid) is op een foto niet betrouwbaar te meten,
+// daarom vragen we het. Daarna dezelfde look- en ervaringsvragen als de quiz.
+const LF_EYE = (lid) => `<svg class="lf-eye-svg" width="80" height="48" viewBox="0 0 80 48">
+  <path d="M8,30 Q22,16 40,16 Q58,16 72,30 Q58,42 40,42 Q22,42 8,30 Z" fill="none" stroke="#7b4f6e" stroke-width="1.6"/>
+  <circle cx="40" cy="29" r="8" fill="#d4829e" opacity="0.4"/><circle cx="40" cy="29" r="4.5" fill="#7b4f6e" opacity="0.65"/>
+  ${lid}</svg>`;
+const LF_SCAN_STEPS = [
+  { key: 'lid', title: 'Nog één check: je ooglid', sub: 'Kijk met open ogen recht in de spiegel. Wat zie je boven je wimpers?', opts: [
+    { v: 'crease',  label: 'Duidelijke vouw',  desc: 'Ik zie een plooi en een stukje beweeglijk ooglid', svg: LF_EYE('<path d="M10,22 Q40,2 70,22" fill="none" stroke="#1a0a12" stroke-width="1.6" stroke-linecap="round"/>') },
+    { v: 'hooded',  label: 'Hangend ooglid',   desc: 'De huid hangt over de vouw; ik zie weinig of geen ooglid', svg: LF_EYE('<path d="M6,26 Q22,8 40,10 Q58,8 74,26 Q58,20 40,21 Q22,20 6,26 Z" fill="rgba(212,130,158,0.3)" stroke="#1a0a12" stroke-width="1.6"/>') },
+    { v: 'monolid', label: 'Geen vouw',        desc: 'Mijn ooglid is glad, zonder zichtbare plooi', svg: LF_EYE('<path d="M8,30 Q22,16 40,16 Q58,16 72,30" fill="none" stroke="#1a0a12" stroke-width="2.6" stroke-linecap="round"/>') }
+  ]},
+  { key: 'look', title: 'Welke look zoek jij?', sub: 'Kies de vibe die bij jouw inner queen past 👑', opts: [
+    { v: 'natural',  icon: '🌿', label: 'Natuurlijk',   desc: 'Jouw wimpers, maar mooier' },
+    { v: 'glam',     icon: '✨', label: 'Full Glam',    desc: 'Gedurfd, dramatisch & een echte blikvanger' },
+    { v: 'wispy',    icon: '🕊️', label: 'Wispy',        desc: 'Luchtig, getextureerd & ultra-vrouwelijk' },
+    { v: 'balanced', icon: '⚖️', label: 'Gebalanceerd', desc: 'Vol maar draagbaar, voor elke gelegenheid' }
+  ]},
+  { key: 'lvl', title: 'Hoeveel ervaring heb jij met wimpers?', sub: 'We koppelen je aan de stijl die past bij jouw niveau', opts: [
+    { v: 'beginner',     icon: '🌱', label: 'Beginner',   desc: 'Nieuw met wimpers — lekker simpel!' },
+    { v: 'intermediate', icon: '💅', label: 'Gevorderd',  desc: 'Ik heb al een paar stijlen geprobeerd' },
+    { v: 'pro',          icon: '👑', label: 'Lash Queen', desc: 'Ik ken mijn weg met wimpers' }
+  ]}
+];
+
+function lfScanAsk(i) {
+  const s = LF_SCAN_STEPS[i];
+  const box = document.getElementById('lfScanQ');
+  const opts = s.opts.map(o => `
+    <div class="lf-opt${lfSA[s.key] === o.v ? ' selected' : ''}" onclick="lfScanPick(this,${i},'${o.v}')">
+      <div class="lf-opt-check">✓</div>
+      ${o.svg || `<span class="lf-opt-icon">${o.icon}</span>`}
+      <div class="lf-opt-label">${o.label}</div>
+      <div class="lf-opt-desc">${o.desc}</div>
+    </div>`).join('');
+  const last = i === LF_SCAN_STEPS.length - 1;
+  box.innerHTML = `
+    <p class="lf-step">Scan gelukt ✓ · vraag ${i + 1} van ${LF_SCAN_STEPS.length}</p>
+    <h3 class="lf-qtitle">${s.title}</h3>
+    <p class="lf-qsub">${s.sub}</p>
+    <div class="lf-options">${opts}</div>
+    <div class="lf-nav">
+      ${i > 0 ? `<button class="lf-btn-back" onclick="lfScanAsk(${i - 1})">← Terug</button>` : '<div></div>'}
+      <button class="lf-btn-next${lfSA[s.key] ? ' on' : ''}" id="lfScanNext" onclick="${last ? 'lfScanFinish()' : `lfScanAsk(${i + 1})`}">${last ? 'Mijn Match Bekijken ✦' : 'Volgende →'}</button>
+    </div>`;
+  lfShow('lfScanQ', true);
+  box.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function lfScanPick(el, i, v) {
+  el.closest('.lf-options').querySelectorAll('.lf-opt').forEach(o => o.classList.remove('selected'));
+  el.classList.add('selected');
+  lfSA[LF_SCAN_STEPS[i].key] = v;
+  document.getElementById('lfScanNext').classList.add('on');
+}
+
+function lfScanFinish() {
+  const s = lfScan, m = s.m;
+  const shape = (lfSA.lid === 'hooded' || lfSA.lid === 'monolid') ? lfSA.lid : s.shape;
+  const recs = getQuizRecs(shape, s.size, lfSA.look, lfSA.lvl);
+
+  const tiltTxt = m.tilt >= LF_T.tiltUp ? 'lopen duidelijk omhoog' : m.tilt >= 4 ? 'lopen licht omhoog' : m.tilt <= LF_T.tiltDown ? 'lopen iets omlaag' : 'liggen vrij recht';
+  const sizeTxt = { small: 'aan de kleine kant', medium: 'gemiddeld van formaat', large: 'groot en expressief' }[s.size];
+  const lidTxt = { crease: 'een duidelijke ooglidplooi', hooded: 'een hangend ooglid', monolid: 'een glad ooglid zonder plooi' }[lfSA.lid];
+  const measure = `<span class="lf-scan-measure" style="display:block">
+    <strong>Wat de scan zag:</strong> je buitenooghoeken ${tiltTxt} (${Math.round(m.tilt)}°), je ogen zijn ${sizeTxt}, en je gaf aan dat je ${lidTxt} hebt.<br>
+    Klopt dit niet met wat je in de spiegel ziet? <a href="#" onclick="lfSwitch('quiz');return false;" style="color:var(--purple)">Doe dan de quiz</a> en vergelijk.
+    ${lfDebugText(m)}</span>`;
+
+  lfShow('lfScanQ', false);
+  const card = document.getElementById('lfSCard');
+  card.innerHTML = lfBuild({ recs, shape, customDesc: SHAPES[shape].desc + measure }, true);
+  card.classList.add('show');
+  card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+  lfTrack('Lash Scan Voltooid', { oogvorm: SHAPES[shape].label, ooggrootte: s.size, look: lfSA.look, ervaring: lfSA.lvl });
+}
+
+function lfTrack(event, props) {
+  try { if (window.klaviyo && typeof window.klaviyo.push === 'function') window.klaviyo.push(['track', event, props]); } catch (e) {}
+}
+
+function lfErr(msg, offerQuiz) {
+  lfShow('lfShot', false); lfShow('lfCam', false); lfShow('lfScanQ', false);
+  const card = document.getElementById('lfSCard');
+  card.innerHTML = `<div style="text-align:center;padding:40px 20px">
+    <p style="font-family:'Cormorant Garamond',serif;font-size:22px;color:var(--dark);margin-bottom:10px">Dat lukte nog niet</p>
+    <p style="font-size:11px;color:var(--grey);margin-bottom:24px;line-height:1.7">${msg}</p>
+    <button class="lf-btn-retake" onclick="lfReset()">↺ Opnieuw Proberen</button>
+    ${offerQuiz ? `<button class="lf-btn-retake" style="margin-left:8px" onclick="lfReset();lfSwitch('quiz')">✦ Doe de Quiz</button>` : ''}
+  </div>`;
+  card.classList.add('show');
+}
+
+// ===================================================================
+// EMAIL OPSLAAN — Klaviyo koppeling  (GEFIXT)
+// - consent 'SUBSCRIBED' wordt nu meegestuurd (anders geen abonnee / geen mail)
+// - actuele API-revisie
+// - echte foutafhandeling: bij een fout blijft de knop staan en zie je de reden in de console
+// ===================================================================
+async function lfSaveEmail() {
+  const email = document.getElementById('lfEmailInput').value.trim();
+  if (!email || !email.includes('@')) {
+    document.getElementById('lfEmailInput').style.borderColor = 'var(--pink)';
+    return;
+  }
+
+  const btn = document.querySelector('.lf-email-btn');
+  btn.textContent = 'Versturen...';
+  btn.style.opacity = '0.7';
+  btn.disabled = true;
+
+  // Haal de lash match op uit de huidige resultaten
+  const resultNames = [...document.querySelectorAll('.lf-rec-name')].map(el => el.textContent).join(', ');
+  const shapeName = document.querySelector('.lf-res-shape em')?.textContent || '';
+
+  try {
+    const response = await fetch('https://a.klaviyo.com/client/subscriptions/?company_id=VunE7A', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'revision': '2024-10-15'
+      },
+      body: JSON.stringify({
+        data: {
+          type: 'subscription',
+          attributes: {
+            custom_source: 'Lash Quiz',
+            profile: {
+              data: {
+                type: 'profile',
+                attributes: {
+                  email: email,
+                  properties: {
+                    lash_quiz_oogvorm: shapeName,
+                    lash_quiz_aanbeveling: resultNames,
+                    lash_quiz_datum: new Date().toLocaleDateString('nl-NL'),
+                    lash_quiz_bron: document.getElementById('lfScanner').classList.contains('active') ? 'AI scan' : 'Quiz'
+                  }
+                }
+              }
+            }
+          },
+          relationships: {
+            list: {
+              data: {
+                type: 'list',
+                id: 'SLnmM4'
+              }
+            }
+          }
+        }
+      })
+    });
+
+    if (response.ok) {
+      document.getElementById('lfEmailSuccess').classList.add('show');
+      document.getElementById('lfEmailRow').style.display = 'none';
+    } else {
+      const errText = await response.text();
+      console.error('Klaviyo weigerde de aanmelding:', response.status, errText);
+      btn.textContent = 'Opnieuw proberen';
+      btn.style.opacity = '1';
+      btn.disabled = false;
+    }
+  } catch(e) {
+    console.error('Klaviyo-verbinding mislukt:', e);
+    btn.textContent = 'Opnieuw proberen';
+    btn.style.opacity = '1';
+    btn.disabled = false;
+  }
+}
+
+// ===================================================================
+// RESULTAAT BOUWEN
+// ===================================================================
+function lfBuild({ recs, shape, customDesc, label }, isScanner) {
+  const info = SHAPES[shape] || { label: label || 'Jouw Oogvorm', desc: customDesc || '' };
+  const dl = label || info.label;
+  const dd = customDesc || info.desc;
+
+  const rh = recs.map((r, i) => {
+    const cartBtn = r.p.variantId
+      ? `<button class="lf-btn-cart" onclick="lfAddToCart(event,'${r.p.variantId}',this)">🛒 In mandje</button>`
+      : `<a class="lf-btn-view" href="${r.p.url}" target="_blank">Bekijk →</a>`;
+    return `
+    <div class="lf-rec">
+      <span class="lf-rec-rank">${i+1}</span>
+      <div class="lf-rec-info">
+        <div class="lf-rec-name"><a href="${r.p.url}" target="_blank" style="color:inherit;text-decoration:none;">${r.p.name}</a></div>
+        <div class="lf-rec-why">${r.why}</div>
+        <div class="lf-rec-price">${r.p.price}</div>
+      </div>
+      <div class="lf-rec-actions">
+        <span class="lf-rec-badge">${r.p.badge}</span>
+        ${cartBtn}
+      </div>
+    </div>`;
+  }).join('');
+
+  const rt = isScanner
+    ? `<button class="lf-btn-retake" onclick="lfReset()">↺ Opnieuw Scannen</button>`
+    : `<button class="lf-btn-retake" onclick="lfRetake()">↺ Quiz Opnieuw Doen</button>`;
+
+  const resultHtml = `
+    <div class="lf-res-eyebrow">${isScanner ? '◎ AI Scan Resultaat' : '✦ Jouw Lash Match'}</div>
+    <h3 class="lf-res-shape">Je hebt <em>${dl}</em></h3>
+    <p class="lf-res-desc">${dd}</p>
+    <div class="lf-divider"></div>
+    <p class="lf-rec-title">Jouw Perfecte Lash Matches</p>
+    <div class="lf-recs">${rh}</div>
+    <div class="lf-actions">
+      <a class="lf-btn-shop" href="https://luxuryqueenlashes.com/en/collections/best-sellers" target="_blank">Alle Stijlen Bekijken →</a>
+      ${rt}
+    </div>
+    <div class="lf-email-box">
+      <h4 class="lf-email-title">Sla jouw resultaat op 💌</h4>
+      <p class="lf-email-sub">Vul je e-mailadres in en wij sturen je jouw persoonlijke lash aanbeveling — handig voor later!</p>
+      <div class="lf-email-row" id="lfEmailRow">
+        <input type="email" class="lf-email-input" id="lfEmailInput" placeholder="jouw@email.nl">
+        <button class="lf-email-btn" onclick="lfSaveEmail()">Versturen</button>
+      </div>
+      <p class="lf-email-success" id="lfEmailSuccess">✓ Gelukt! Wij sturen jouw lash match naar je toe. 👑</p>
+      <p class="lf-email-disclaimer">Door jouw e-mailadres in te vullen ga je akkoord dat LuxuryQueenLashes je e-mails mag sturen met jouw lash resultaat en aanbiedingen. Je kunt je altijd uitschrijven.</p>
+    </div>`;
+  lfSaveSession(resultHtml, isScanner);
+  return resultHtml;
+}
+
+// ===================================================================
+// WINKELMANDJE
+// ===================================================================
+async function lfAddToCart(e, variantId, btn) {
+  e.preventDefault();
+  e.stopPropagation();
+  btn.textContent = '...';
+  btn.disabled = true;
+  try {
+    const resp = await fetch('/cart/add.js', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id: parseInt(variantId), quantity: 1 })
+    });
+    if (resp.ok) {
+      btn.textContent = '✓ Toegevoegd!';
+      const lfBron = btn.closest('#lfScanner') ? 'AI scan' : 'Quiz';
+      const lfVorm = (btn.closest('.lf-result')?.querySelector('.lf-res-shape em')?.textContent) || '';
+      fetch('/cart/update.js', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ attributes: { 'Lash Match bron': lfBron, 'Lash Match oogvorm': lfVorm } }) }).catch(() => {});
+      btn.classList.add('added');
+      // Update winkelwagentje teller als die bestaat
+      fetch('/cart.js').then(r=>r.json()).then(cart=>{
+        const counter = document.querySelector('.cart-count, [data-cart-count], .header__cart-count, #cart-count');
+        if (counter) counter.textContent = cart.item_count;
+      });
+    } else {
+      btn.textContent = '🛒 In mandje';
+      btn.disabled = false;
+    }
+  } catch(err) {
+    btn.textContent = '🛒 In mandje';
+    btn.disabled = false;
+  }
+}
+
+// ===================================================================
+// RESULTATEN OPSLAAN IN SESSIE (blijft bij terug navigeren)
+// ===================================================================
+function lfSaveSession(html, isScanner) {
+  try {
+    sessionStorage.setItem('lq_result_html', html);
+    sessionStorage.setItem('lq_result_scanner', isScanner ? '1' : '0');
+  } catch(e) {}
+}
+
+function lfRestoreSession() {
+  try {
+    const html = sessionStorage.getItem('lq_result_html');
+    const isScanner = sessionStorage.getItem('lq_result_scanner') === '1';
+    if (!html) return;
+    if (isScanner) {
+      lfSwitch('scanner');
+      document.getElementById('lfSCard').innerHTML = html;
+      document.getElementById('lfSCard').classList.add('show');
+    } else {
+      document.getElementById('lfQ1').classList.remove('active');
+      document.getElementById('lfQResult').style.display = 'block';
+      document.getElementById('lfQCard').innerHTML = html;
+      document.getElementById('lfQCard').classList.add('show');
+    }
+  } catch(e) {}
+}
+
+// Herstel resultaten bij pagina laden
+window.addEventListener('DOMContentLoaded', lfRestoreSession);
+
+function lfRetake() {
+  document.querySelectorAll('.lf-qcard').forEach(q => q.classList.remove('active'));
+  document.getElementById('lfQ1').classList.add('active');
+  document.getElementById('lfQResult').style.display = 'none';
+  document.getElementById('lfQLd').classList.remove('show');
+  document.getElementById('lfQCard').classList.remove('show');
+  document.getElementById('lfQCard').innerHTML = '';
+  document.querySelectorAll('.lf-opt').forEach(o => o.classList.remove('selected'));
+  document.querySelectorAll('.lf-btn-next').forEach(b => b.classList.remove('on'));
+  Object.keys(lfA).forEach(k => delete lfA[k]);
+  lfInitDots();
+}
+
+function lfSwitch(mode) {
+  document.querySelectorAll('.lf-mode-btn').forEach((b, i) => b.classList.toggle('active', (mode==='quiz'&&i===0)||(mode==='scanner'&&i===1)));
+  document.getElementById('lfQuiz').classList.toggle('active', mode==='quiz');
+  document.getElementById('lfScanner').classList.toggle('active', mode==='scanner');
+  if (mode === 'scanner') lfLoadScanner().catch(() => {}); else lfCamStop();
+}
+</script>
+</body>
+</html>
